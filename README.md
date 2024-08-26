@@ -49,11 +49,14 @@ theme(axis.text.y = element_text(size=12), axis.text.x = element_text(size=12), 
 ### (H)
 ## Fig.3
 ### (B)
+```R
 library(Seurat)
 data <- readRDS('pbmc_T.rds')
 DimPlot(data, group.by='common_T')
 DimPlot(data, group.by='celltype')
+```
 ### (C)
+```R
 data <- readRDS('Tcells_PBMC_CSF.rds')
 meta <- data@meta.data %>% dplyr::filter(number_of_tcr_per_sample >= 2)
 meta <- meta %>% dplyr::filter(condition1 == 'CSF')
@@ -63,7 +66,9 @@ cd8_d <- cd8 %>% distinct(CTaa.x, .keep_all = TRUE)
 table(cd8_d$common_T)
 cd4_d <- cd4 %>% distinct(CTaa.x, .keep_all = TRUE)
 table(cd4_d$common_T)
+```
 ### (F)
+```R
 data <- readRDS('effectorT.rds')
 DimPlot(data_nromalized, label=TRUE, label.size=10) + NoLegend()
 data_nromalized@meta.data <- data_nromalized@meta.data %>% mutate(top2 = case_when(
@@ -74,3 +79,4 @@ data_nromalized@meta.data <- data_nromalized@meta.data %>% mutate(top2 = case_wh
 ))
 Idents(data_nromalized) <- "top2"
 DimPlot(data_nromalized, group.by="top2", cells.highlight = true, cols.highlight = "red", cols = "grey", sizes.highlight = 1) + NoLegend() + theme(plot.title = element_text(size = 0))
+```
