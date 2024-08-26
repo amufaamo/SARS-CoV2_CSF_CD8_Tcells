@@ -47,3 +47,8 @@ theme(axis.text.y = element_text(size=12), axis.text.x = element_text(size=12), 
 ### (F)
 ### (G)
 ### (H)
+
+## Fig.3
+### (B)
+library(Seurat)
+data <- readRDS('')
