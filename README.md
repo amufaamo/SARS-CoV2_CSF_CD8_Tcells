@@ -80,3 +80,25 @@ data_nromalized@meta.data <- data_nromalized@meta.data %>% mutate(top2 = case_wh
 Idents(data_nromalized) <- "top2"
 DimPlot(data_nromalized, group.by="top2", cells.highlight = true, cols.highlight = "red", cols = "grey", sizes.highlight = 1) + NoLegend() + theme(plot.title = element_text(size = 0))
 ```
+
+### (G)
+```R
+library("ggrepel")
+library('tidyverse')
+markers <- read.csv('cd8_markers.csv')
+markers$label <- NULL
+markers$diffexpressed <- 'NO'
+markers$gene_id <- rownames(markers)
+genes <- c('GNLY', 'GZMB', 'PRF1', 'CCL5', 'HLA-RB1', 'GZMK', 'HLA-DRA', 'HLA-DQB1')
+markers <- markers %>% mutate(label = case_when(
+        gene_id %in% genes ~ gene_id        
+    ))
+markers <- markers %>% mutate(diffexpressed = case_when(
+        gene_id %in% genes ~ 'YES',
+        TRUE ~ 'NO'
+    ))
+
+markers %>% ggplot(aes(x = avg_log2FC, y = -log10(p_val_adj), col = diffexpressed,
+        label = label)) + geom_point() + theme_minimal() + scale_color_manual(values=c("black", "red")) + geom_text_repel() + NoLegend()
+
+```
