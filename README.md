@@ -45,6 +45,7 @@ scale_color_gradient(low = 'red', high = 'blue') + guides(colour = guide_colourb
 theme(axis.text.y = element_text(size=12), axis.text.x = element_text(size=12), axis.title = element_blank())
 ```
 ### (F)
+```R
 library(devtools)
 library(CellChat)
 library(patchwork)
@@ -182,9 +183,9 @@ ggplot(dif, aes(x = Label, y = su)) +
   )
 #4x3 portlait
 
-
-
-
+```
+### (H)
+```R
 ###############
 #Visualization using for loop
 ##############
@@ -262,8 +263,7 @@ for (intcell in interests) {
       legend.title = element_text(size = 8) 
     ))
 }
-### (G)
-### (H)
+```
 ## Fig.3
 ### (B)
 ```R
@@ -318,4 +318,11 @@ markers <- markers %>% mutate(diffexpressed = case_when(
 markers %>% ggplot(aes(x = avg_log2FC, y = -log10(p_val_adj), col = diffexpressed,
         label = label)) + geom_point() + theme_minimal() + scale_color_manual(values=c("black", "red")) + geom_text_repel() + NoLegend()
 
+```
+
+### (H)
+```R
+library(Seurat)
+data <- readRDS('effectorT_CSF_PBMC.rds')
+VlnPlot(data, features=c('GNLY', 'GZMB', 'PRF1', 'GZMK', 'HLA-DRA', 'CCL5'), group.by='new_column')
 ```
