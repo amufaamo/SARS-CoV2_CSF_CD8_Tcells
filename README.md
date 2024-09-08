@@ -18,7 +18,37 @@ DotPlot(so,
 ```
 ### (D)
 ```R
-csv <- read.csv('goenrichment_csf_vs_publiccsf.csv')
+markers <- readRDS('de_csf.rds')
+mycompareGO <-function(genelist, title = 'title'){
+    library(clusterProfiler)
+    library(org.Hs.eg.db)
+    
+    convert_symbol <- function(filename){
+    library(clusterProfiler)
+    library(org.Hs.eg.db) 
+    converted <- bitr(filename, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+    return (converted$"ENTREZID")
+    }
+ 
+    genelist.entrezID<- map(genelist, convert_symbol)
+ 
+    co.bp <- try(compareCluster(geneCluster = genelist.entrezID, fun = enrichGO, OrgDb =  "org.Hs.eg.db", ont= "BP"))
+    co.cc <- try(compareCluster(geneCluster = genelist.entrezID, fun = enrichGO, OrgDb =  "org.Hs.eg.db", ont= "CC"))
+    co.mf <- try(compareCluster(geneCluster = genelist.entrezID, fun = enrichGO, OrgDb =  "org.Hs.eg.db", ont= "MF"))
+    co.kegg <- try(compareCluster(geneCluster = genelist.entrezID, fun = enrichKEGG))
+
+    try(dotplot(co.bp, title=paste0(title,",","GO bp"))) 
+    try(dotplot(co.cc, title=paste0(title,",","GO cc")))
+    try(dotplot(co.mf, title=paste0(title,",","GO mf")))
+    try(dotplot(co.kegg, title=paste0(title,",","KEGG")))
+    return (list(co.bp, co.cc, co.mf, co.kegg))
+}
+list <-c()
+markers <- markers %>% dplyr::filter(cluster == "CSF" & p_val_adj < 0.1)
+markers %>% dplyr::filter(avg_log2FC > 0) %>% .$gene -> list$up
+markers %>% dplyr::filter(avg_log2FC < 0) %>% .$gene -> list$down
+mycompareGO(list, "csf") -> result
+
 csv %>% dplyr::filter(Cluster == 'up') -> csv
 head(csv, n=5) -> csv2
 csv2$qvalue <- -log(csv2$qvalue)
