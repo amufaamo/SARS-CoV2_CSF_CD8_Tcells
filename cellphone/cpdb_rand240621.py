@@ -41,7 +41,6 @@ import ktplotspy as kpy
 import matplotlib.pyplot as plt
 
 #heatmap https://ktplotspy.readthedocs.io/en/latest/notebooks/tutorial.html
-# テキストファイルからデータを読み込む
 
 adata = ad.read_text("patient/CellphoneDB_patient_count.txt")
 means = pd.read_csv("results_patient/statistical_analysis_means_06_21_2024_115853.txt", sep="\t")
