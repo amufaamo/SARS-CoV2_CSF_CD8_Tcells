@@ -358,34 +358,3 @@ pheatmap(mat_t,
          cluster_cols = FALSE,  
          scale = "column")      
 #6x3 landscape
-
-
-
-#IL2RB
-library(msigdbr, lib.loc="C:/Rprojects/covid")
-library(pheatmap, lib.loc="C:/Rprojects/covid")
-msig_data <- msigdbr(species = "Homo sapiens")
-il2rb_genes <- msig_data[msig_data$gs_name == "BIOCARTA_IL2RB_PATHWAY", "gene_symbol"]
-DoHeatmap(nk, features = unique(il2rb_genes$gene_symbol))
-#Idents(nk) <- "condition1"
-plot1 = DotPlot(object = nk, features = unique(il2rb_genes$gene_symbol),  col.max = 2)
-plot1 + theme(axis.text.x = element_text(angle = 90, hjust = 1))
-# 平均発現量を計算 (RNAスロット)
-avg_expr <- AverageExpression(nk, features = geneset)$RNA  
-
-# 発現値をスケール化（Zスコア）
-scaled_expr <- t(scale(t(as.matrix(avg_expr))))
-
-# NAやNaNを含む遺伝子を除去
-scaled_expr <- scaled_expr[complete.cases(scaled_expr), ]
-
-# ヒートマップを描画（データが空でない場合のみ）
-if (nrow(scaled_expr) > 0) {
-  pheatmap(scaled_expr, 
-           cluster_rows = TRUE, 
-           cluster_cols = TRUE, 
-           color = colorRampPalette(c("blue", "white", "red"))(100),
-           main = "")
-} else {
-  message("No valid genes remaining after filtering.")
-}
